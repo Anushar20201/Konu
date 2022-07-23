@@ -30,4 +30,6 @@ This can be accessible at : https://github.com/Anushar20201/Konu
 https://watch.screencastify.com/v/q2nZYCloVtGU26EGTxNY
 
 ### Screenshot
- ![Sample](https://github.com/Anushar20201/plan-your-time/blob/main/assets/images/screenshot.jpg)
+ ![Sample](https://github.com/Anushar20201/Konu/blob/main/screenshots/Capture1.PNG)
+ ![Sample](https://github.com/Anushar20201/Konu/blob/main/screenshots/Capture2.PNG)
+ ![Sample](https://github.com/Anushar20201/Konu/blob/main/screenshots/Capture3.PNG)
