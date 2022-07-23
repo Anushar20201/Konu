@@ -1,68 +1,100 @@
-const router = require('express').Router();
-const { Category, Product } = require('../../models');
+const router = require("express").Router();
+const { Category, Product } = require("../../models");
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   // finding all categories
   Category.findAll({
     include: [
       {
         model: Product,
-        attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
-      }
-    ]
+        attributes: ["id", "product_name", "price", "stock", "category_id"],
+      },
+    ],
   })
-    .then(data => res.json(data))
-    .catch(error => {
+    .then((data) => res.json(data))
+    .catch((error) => {
       console.log(error);
       res.status(500).json(error);
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
   // finding one category by its `id` value
   Category.findOne({
     where: {
-      id: req.params.id
+      id: req.params.id,
     },
     include: [
       {
         model: Product,
-        attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
-      }
-    ]
+        attributes: ["id", "product_name", "price", "stock", "category_id"],
+      },
+    ],
   })
-    .then(data => {
+    .then((data) => {
       if (!data) {
-        res.status(404).json({ message: 'Sorry, no category found'}); 
-        return; 
+        res.status(404).json({ message: "Sorry, no category found" });
+        return;
       }
       res.json(data);
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       res.status(500).json(error);
     });
 });
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   // creating a new category
   Category.create({
-    category_name: req.body.category_name
+    category_name: req.body.category_name,
   })
-    .then(data => res.json(data))
-    .catch(error => {
-        res.status(500).json(error);
-  });
+    .then((data) => res.json(data))
+    .catch((error) => {
+      res.status(500).json(error);
+    });
 });
 
-router.put('/:id', (req, res) => {
+router.put("/:id", (req, res) => {
   // updating a category by its `id` value
+  Category.update(req.body, {
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      if (!data[0]) {
+        res.status(404).json({ message: "Sorry, no category found" });
+        return;
+      }
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   // deleting a category by its `id` value
+  Category.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      if (!data) {
+        res.status(404).json({ message: "Sorry, no category found" });
+        return;
+      }
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 module.exports = router;

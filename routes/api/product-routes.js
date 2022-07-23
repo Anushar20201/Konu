@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Product, Category, Tag, ProductTag } = require("../../models");
+const { Product, Category, Tag, ProductTag, SeedProducts } = require("../../models");
 
 // The `/api/products` endpoint
 
@@ -66,15 +66,13 @@ router.post("/", (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-
-  req.body({
+  Product.create({
     product_name: req.body.product_name,
     price: req.body.price,
     stock: req.body.stock,
+    category_id: req.body.category_id,
     tagIds: req.body.tag_id
-
-    })
-  Product.create(req.body)
+  })
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
@@ -91,7 +89,7 @@ router.post("/", (req, res) => {
     })
     .then((ptId) => res.status(200).json(ptId))
     .catch((error) => {
-      console.log(err);
+      console.log(error);
       res.status(400).json(error);
     });
 });
@@ -133,13 +131,28 @@ router.put("/:id", (req, res) => {
     })
     .then((updatedProductTags) => res.json(updatedProductTags))
     .catch((err) => {
-      // console.log(err);
       res.status(400).json(err);
     });
 });
 
 router.delete("/:id", (req, res) => {
-  // delete one product by its `id` value
+  // deleting one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+      if (!data) {
+        res.status(404).json({ message: "Sorry, no product found" });
+        return;
+      }
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(error);
+    });
 });
 
 module.exports = router;
