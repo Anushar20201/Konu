@@ -3,19 +3,35 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
+// getting all products
 router.get('/', (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
+  // finding all products
+  Product.findAll({
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name']
+      },
+      {
+        model: Tag,
+        attributes: ['id', 'tag_name']
+      }
+    ]
+  })
+    .then(data => res.json(data))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
-// get one product
+// getting one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
 });
 
-// create new product
+// creating new product
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -47,7 +63,7 @@ router.post('/', (req, res) => {
     });
 });
 
-// update product
+// updating product
 router.put('/:id', (req, res) => {
   // update product data
   Product.update(req.body, {
@@ -56,11 +72,11 @@ router.put('/:id', (req, res) => {
     },
   })
     .then((product) => {
-      // find all associated tags from ProductTag
+      // finding all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
     .then((productTags) => {
-      // get list of current tag_ids
+      // getting list of current tag_ids
       const productTagIds = productTags.map(({ tag_id }) => tag_id);
       // create filtered list of new tag_ids
       const newProductTags = req.body.tagIds
