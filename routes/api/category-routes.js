@@ -14,9 +14,9 @@ router.get('/', (req, res) => {
     ]
   })
     .then(data => res.json(data))
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
     });
 });
 
@@ -40,14 +40,21 @@ router.get('/:id', (req, res) => {
       }
       res.json(data);
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
+    .catch(error => {
+      console.log(error);
+      res.status(500).json(error);
     });
 });
 
 router.post('/', (req, res) => {
   // creating a new category
+  Category.create({
+    category_name: req.body.category_name
+  })
+    .then(data => res.json(data))
+    .catch(error => {
+        res.status(500).json(error);
+  });
 });
 
 router.put('/:id', (req, res) => {
